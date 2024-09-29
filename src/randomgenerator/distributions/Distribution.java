@@ -6,4 +6,8 @@ public interface Distribution {
     double F(double x);
 
     double x(double F);
+
+    double getLeft();
+
+    double getRight();
 }

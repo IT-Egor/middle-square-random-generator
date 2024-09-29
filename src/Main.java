@@ -30,7 +30,7 @@ public class Main {
         ArbitraryDistribution distribution = new ArbitraryDistribution();
         List<Double> normal = generator.generateNormalDistributionSequence();
         List<Double> dist = generator.generateSequenceWithDistribution(normal, distribution);
-        Histogram histogram = new Histogram(50, 0, 6);
+        Histogram histogram = new Histogram(50, distribution.getLeft(), distribution.getRight());
         histogram.addListToHist(dist);
         String pythonData = histogram.getHist().toString().replace("[", "").replace("]", "");
         PythonExecutor.execute("src/randomgenerator/utility/evaluate.py", pythonData);

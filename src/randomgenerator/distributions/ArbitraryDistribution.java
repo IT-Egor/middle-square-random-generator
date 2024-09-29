@@ -2,6 +2,9 @@ package randomgenerator.distributions;
 
 public class ArbitraryDistribution implements Distribution {
 
+    private double left = 0.;
+    private double right = 6.;
+
     @Override
     public double f(double x) {
         if (0 <= x && x <= 1) {
@@ -43,5 +46,15 @@ public class ArbitraryDistribution implements Distribution {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public double getLeft() {
+        return left;
+    }
+
+    @Override
+    public double getRight() {
+        return right;
     }
 }
