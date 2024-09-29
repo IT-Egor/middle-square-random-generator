@@ -1,5 +1,6 @@
 package randomgenerator;
 
+import randomgenerator.distributions.ArbitraryDistribution;
 import randomgenerator.distributions.Distribution;
 import randomgenerator.utility.Mode;
 
@@ -11,7 +12,6 @@ import java.util.Scanner;
 public class RandomGenerator {
     private Long seed;
     private Mode mode;
-    private Distribution distribution;
 
     public RandomGenerator(Long seed) {
         this.seed = seed;
@@ -27,19 +27,6 @@ public class RandomGenerator {
         mode = Mode.AUTO;
         updateSeed();
     }
-
-    public RandomGenerator(Distribution distribution) {
-        this.distribution = distribution;
-        this.mode = Mode.AUTO;
-        updateSeed();
-    }
-
-    public RandomGenerator(Long seed, Mode mode, Distribution distribution) {
-        this.seed = seed;
-        this.mode = mode;
-        this.distribution = distribution;
-    }
-
 
     public void setSeed(Long seed) {
         this.seed = seed;
@@ -57,14 +44,6 @@ public class RandomGenerator {
 
     public Mode getMode() {
         return mode;
-    }
-
-    public Distribution getDistribution() {
-        return distribution;
-    }
-
-    public void setDistribution(Distribution distribution) {
-        this.distribution = distribution;
     }
 
     private void updateSeed() {
@@ -97,6 +76,14 @@ public class RandomGenerator {
                 next = generateNext(prev);
                 values.add(normalize(next));
             }
+        }
+        return values;
+    }
+
+    public List<Double> generateSequenceWithDistribution(List<Double> normalValues, Distribution distribution) {
+        List<Double> values = new ArrayList<>();
+        for (Double normalValue : normalValues) {
+            values.add(distribution.x(normalValue));
         }
         return values;
     }
