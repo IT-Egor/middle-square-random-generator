@@ -12,13 +12,17 @@ import java.util.Scanner;
 
 public class GeneratorRemote {
     private RandomGenerator rg;
-    List<Double> normalNumbers;
-    List<Double> customNumbers;
-    List<Integer> pSegments;
+    Distribution customDistribution;
+    Distribution normalDistribution;
+    private List<Double> normalNumbers;
+    private List<Double> customNumbers;
+    private List<Integer> pSegments;
 
     public GeneratorRemote() {
         System.out.println("Middle square random generator");
         createGenerator();
+        customDistribution = new CustomDistribution();
+        normalDistribution = new NormalDistribution();
     }
 
     public RandomGenerator createGenerator() {
@@ -51,7 +55,8 @@ public class GeneratorRemote {
     }
 
     public void remote(String action) throws IOException, InterruptedException {
-        Distribution customDistribution = new CustomDistribution();
+
+
         Scanner scanner = new Scanner(System.in);
         Histogram hist;
         int n = 0;
