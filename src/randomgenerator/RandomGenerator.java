@@ -51,7 +51,7 @@ public class RandomGenerator {
 
 
 
-    public List<Double> generateNormalDistributionSequence() {
+    public List<Double> generateUniformDistributionSequence() {
         List<Double> values = new ArrayList<>();
         while (values.size() < 20_000) {
             if (mode == Mode.AUTO) {
@@ -79,10 +79,10 @@ public class RandomGenerator {
         return values;
     }
 
-    public List<Double> generateSequenceWithDistribution(List<Double> normalValues, Distribution distribution) {
+    public List<Double> generateSequenceWithDistribution(List<Double> uniformValues, Distribution distribution) {
         List<Double> values = new ArrayList<>();
-        for (Double normalValue : normalValues) {
-            values.add(distribution.x(normalValue));
+        for (Double uniformValue : uniformValues) {
+            values.add(distribution.x(uniformValue));
         }
         return values;
     }

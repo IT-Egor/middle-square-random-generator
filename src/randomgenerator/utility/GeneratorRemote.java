@@ -4,7 +4,7 @@ import randomgenerator.Histogram;
 import randomgenerator.RandomGenerator;
 import randomgenerator.distributions.CustomDistribution;
 import randomgenerator.distributions.Distribution;
-import randomgenerator.distributions.NormalDistribution;
+import randomgenerator.distributions.UniformDistribution;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,8 +13,8 @@ import java.util.Scanner;
 public class GeneratorRemote {
     private RandomGenerator rg;
     Distribution customDistribution;
-    Distribution normalDistribution;
-    private List<Double> normalNumbers;
+    Distribution uniformDistribution;
+    private List<Double> uniformNumbers;
     private List<Double> customNumbers;
     private List<Integer> pSegments;
 
@@ -22,7 +22,7 @@ public class GeneratorRemote {
         System.out.println("Middle square random generator");
         createGenerator();
         customDistribution = new CustomDistribution();
-        normalDistribution = new NormalDistribution();
+        uniformDistribution = new UniformDistribution();
     }
 
     public RandomGenerator createGenerator() {
@@ -45,8 +45,8 @@ public class GeneratorRemote {
     public void printMenu() {
         System.out.println();
         System.out.println("Choose action:");
-        System.out.println("1. Generate normal distribution sequence");
-        System.out.println("2. Evaluate normal distribution sequence");
+        System.out.println("1. Generate uniform distribution sequence");
+        System.out.println("2. Evaluate uniform distribution sequence");
         System.out.println("3. Evaluate custom distribution sequence");
         if (rg.getMode() == Mode.MANUAL) {
             System.out.println("4. Set seed");
@@ -63,23 +63,23 @@ public class GeneratorRemote {
 
         switch (action) {
             case "1":
-                normalNumbers = rg.generateNormalDistributionSequence();
-                System.out.println("\nGenerated normal distribution sequence" +
+                uniformNumbers = rg.generateUniformDistributionSequence();
+                System.out.println("\nGenerated uniform distribution sequence" +
                         "\nSeed = " + rg.getSeed() +
-                        "\nPeriod = " + normalNumbers.size());
+                        "\nPeriod = " + uniformNumbers.size());
                 break;
 
             case "2":
                 System.out.print("\nNumber of segments in the sequence = ");
                 n = scanner.nextInt();
-                hist = new Histogram(n, new NormalDistribution());
+                hist = new Histogram(n, new UniformDistribution());
                 hist.clearHist();
 
-                if (normalNumbers != null) {
-                    hist.addListToHist(normalNumbers);
+                if (uniformNumbers != null) {
+                    hist.addListToHist(uniformNumbers);
                     System.out.println("Distribution data: " + hist.getHist());
                     String pythonData = hist.getHist().toString().replace("[", "").replace("]", "");
-                    PythonExecutor.execute("src/randomgenerator/utility/evaluateNormal.py", pythonData, "");
+                    PythonExecutor.execute("src/randomgenerator/utility/evaluateUniform.py", pythonData, "");
                 } else {
                     System.out.println("Empty list");
                 }
@@ -91,8 +91,8 @@ public class GeneratorRemote {
                 hist = new Histogram(n, customDistribution);
                 hist.clearHist();
 
-                if (normalNumbers != null) {
-                    customNumbers = rg.generateSequenceWithDistribution(normalNumbers, customDistribution);
+                if (uniformNumbers != null) {
+                    customNumbers = rg.generateSequenceWithDistribution(uniformNumbers, customDistribution);
                     hist.addListToHist(customNumbers);
                     pSegments = hist.getProbabilityOfHittingTheSegment();
                     System.out.println("Distribution data: " + hist.getHist());

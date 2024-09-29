@@ -16,10 +16,10 @@
 ### RandomGenerator
 Основной класс для генерации последовательностей случайных чисел  
 Генерация случайных чисел основана на методе середин квадратов для 64 разрядной сетки  
-`List<Double> generateNormalDistributionSequence()` - генерирует последовательность чисел в промежутке [0, 1), 
+`List<Double> generateUniformDistributionSequence()` - генерирует последовательность чисел в промежутке [0, 1), 
 распределенных по равномерному закону. Период - длина последовательности, за конец считается зацикиливание или обращение в 0  
 
-`List<Double> generateSequenceWithDistribution(List<Double> normalValues, Distribution distribution)` - 
+`List<Double> generateSequenceWithDistribution(List<Double> uniformValues, Distribution distribution)` - 
 генерирует последовательность чисел, распределенных по указанному закону
 
 Может работать в автономном или ручном режиме
@@ -60,5 +60,5 @@
 ### evaluateAny.py
 Оценивает произвольное распределение 
 
-### evaluateNormal.py
+### evaluateUniform.py
 Оценивает равномерное распределение

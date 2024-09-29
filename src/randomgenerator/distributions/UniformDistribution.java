@@ -1,6 +1,6 @@
 package randomgenerator.distributions;
 
-public class NormalDistribution implements Distribution {
+public class UniformDistribution implements Distribution {
     private final double left = 0.;
     private final double right = 1.;
 
