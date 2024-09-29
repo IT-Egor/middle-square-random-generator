@@ -1,9 +1,9 @@
 package randomgenerator.distributions;
 
-public class ArbitraryDistribution implements Distribution {
+public class LR2Distribution implements Distribution {
 
-    private double left = 0.;
-    private double right = 6.;
+    private final double left = 0.;
+    private final double right = 6.;
 
     @Override
     public double f(double x) {

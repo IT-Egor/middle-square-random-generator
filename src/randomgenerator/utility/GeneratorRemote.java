@@ -2,6 +2,8 @@ package randomgenerator.utility;
 
 import randomgenerator.Histogram;
 import randomgenerator.RandomGenerator;
+import randomgenerator.distributions.LR2Distribution;
+import randomgenerator.distributions.NormalDistribution;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,13 +61,13 @@ public class GeneratorRemote {
             case "2":
                 System.out.print("\nNumber of segments in the sequence = ");
                 n = scanner.nextInt();
-                Histogram hist = new Histogram(n, 0., 1.);
+                Histogram hist = new Histogram(n, new NormalDistribution());
                 hist.clearHist();
                 if (normalizedNumbers != null) {
                     hist.addListToHist(normalizedNumbers);
                     System.out.println("Distribution data: " + hist.getHist());
                     String pythonData = hist.getHist().toString().replace("[", "").replace("]", "");
-                    PythonExecutor.execute("src/randomgenerator/utility/evaluate.py", pythonData);
+                    PythonExecutor.execute("src/randomgenerator/utility/evaluateNormal.py", pythonData);
                 } else {
                     System.out.println("Empty list");
                 }

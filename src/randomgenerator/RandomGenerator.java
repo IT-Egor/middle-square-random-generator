@@ -1,6 +1,5 @@
 package randomgenerator;
 
-import randomgenerator.distributions.ArbitraryDistribution;
 import randomgenerator.distributions.Distribution;
 import randomgenerator.utility.Mode;
 
