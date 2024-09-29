@@ -1,6 +1,6 @@
 package randomgenerator.distributions;
 
-public class LR2Distribution implements Distribution {
+public class CustomDistribution implements Distribution {
 
     private final double left = 0.;
     private final double right = 6.;

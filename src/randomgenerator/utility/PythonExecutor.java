@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class PythonExecutor {
-    public static void execute(String pythonFile, String hist) throws IOException, InterruptedException {
-        ProcessBuilder pb = new ProcessBuilder("python3.10", pythonFile, hist);
+    public static void execute(String pythonFile, String hist, String pSegments) throws IOException, InterruptedException {
+        ProcessBuilder pb = new ProcessBuilder("python3.10", pythonFile, hist, pSegments);
         Process p = pb.start();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));

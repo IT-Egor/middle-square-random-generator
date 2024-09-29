@@ -2,7 +2,8 @@ package randomgenerator.utility;
 
 import randomgenerator.Histogram;
 import randomgenerator.RandomGenerator;
-import randomgenerator.distributions.LR2Distribution;
+import randomgenerator.distributions.CustomDistribution;
+import randomgenerator.distributions.Distribution;
 import randomgenerator.distributions.NormalDistribution;
 
 import java.io.IOException;
@@ -11,7 +12,9 @@ import java.util.Scanner;
 
 public class GeneratorRemote {
     private RandomGenerator rg;
-    List<Double> normalizedNumbers;
+    List<Double> normalNumbers;
+    List<Double> customNumbers;
+    List<Integer> pSegments;
 
     public GeneratorRemote() {
         System.out.println("Middle square random generator");
@@ -40,6 +43,7 @@ public class GeneratorRemote {
         System.out.println("Choose action:");
         System.out.println("1. Generate normal distribution sequence");
         System.out.println("2. Evaluate normal distribution sequence");
+        System.out.println("3. Evaluate custom distribution sequence");
         if (rg.getMode() == Mode.MANUAL) {
             System.out.println("4. Set seed");
         }
@@ -47,30 +51,54 @@ public class GeneratorRemote {
     }
 
     public void remote(String action) throws IOException, InterruptedException {
+        Distribution customDistribution = new CustomDistribution();
         Scanner scanner = new Scanner(System.in);
+        Histogram hist;
         int n = 0;
 
         switch (action) {
             case "1":
-                normalizedNumbers = rg.generateNormalDistributionSequence();
+                normalNumbers = rg.generateNormalDistributionSequence();
                 System.out.println("\nGenerated normal distribution sequence" +
                         "\nSeed = " + rg.getSeed() +
-                        "\nPeriod = " + normalizedNumbers.size());
+                        "\nPeriod = " + normalNumbers.size());
                 break;
 
             case "2":
                 System.out.print("\nNumber of segments in the sequence = ");
                 n = scanner.nextInt();
-                Histogram hist = new Histogram(n, new NormalDistribution());
+                hist = new Histogram(n, new NormalDistribution());
                 hist.clearHist();
-                if (normalizedNumbers != null) {
-                    hist.addListToHist(normalizedNumbers);
+
+                if (normalNumbers != null) {
+                    hist.addListToHist(normalNumbers);
                     System.out.println("Distribution data: " + hist.getHist());
                     String pythonData = hist.getHist().toString().replace("[", "").replace("]", "");
-                    PythonExecutor.execute("src/randomgenerator/utility/evaluateNormal.py", pythonData);
+                    PythonExecutor.execute("src/randomgenerator/utility/evaluateNormal.py", pythonData, "");
                 } else {
                     System.out.println("Empty list");
                 }
+                break;
+
+            case "3":
+                System.out.print("\nNumber of segments in the sequence = ");
+                n = scanner.nextInt();
+                hist = new Histogram(n, customDistribution);
+                hist.clearHist();
+
+                if (normalNumbers != null) {
+                    customNumbers = rg.generateSequenceWithDistribution(normalNumbers, customDistribution);
+                    hist.addListToHist(customNumbers);
+                    pSegments = hist.getProbabilityOfHittingTheSegment();
+                    System.out.println("Distribution data: " + hist.getHist());
+                    System.out.println("Probability of hitting the segment = " + pSegments);
+                    String pythonData = hist.getHist().toString().replace("[", "").replace("]", "");
+                    String pythonData2 = pSegments.toString().replace("[", "").replace("]", "");
+                    PythonExecutor.execute("src/randomgenerator/utility/evaluateAny.py", pythonData, pythonData2);
+                } else {
+                    System.out.println("Empty list");
+                }
+
                 break;
 
             case "0":

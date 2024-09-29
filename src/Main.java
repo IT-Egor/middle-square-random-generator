@@ -1,11 +1,6 @@
-import randomgenerator.Histogram;
-import randomgenerator.RandomGenerator;
-import randomgenerator.distributions.LR2Distribution;
 import randomgenerator.utility.GeneratorRemote;
-import randomgenerator.utility.Mode;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
