@@ -1,4 +1,4 @@
-package randomgenerator;
+package randomgenerator.service;
 
 import randomgenerator.distributions.Distribution;
 import randomgenerator.utility.Mode;

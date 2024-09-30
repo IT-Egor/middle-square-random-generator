@@ -10,6 +10,7 @@ expected_frequencies = [int(x) for x in sys.argv[2].split(", ")]
 observe_length = len(observed_frequencies)
 
 chi2 = sum([(observed_frequencies[i] - expected_frequencies[i])**2 / expected_frequencies[i] for i in range(observe_length)])
+# степени свободы df определяются как длина исследуемой выборки - 1
 p_value = 1 - stats.chi2.cdf(chi2, observe_length - 1)
 
 print(f"Chi-square statistics: {chi2}")

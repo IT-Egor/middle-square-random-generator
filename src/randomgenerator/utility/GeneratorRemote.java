@@ -1,7 +1,7 @@
 package randomgenerator.utility;
 
-import randomgenerator.Histogram;
-import randomgenerator.RandomGenerator;
+import randomgenerator.service.Histogram;
+import randomgenerator.service.RandomGenerator;
 import randomgenerator.distributions.CustomDistribution;
 import randomgenerator.distributions.Distribution;
 import randomgenerator.distributions.UniformDistribution;
@@ -79,7 +79,7 @@ public class GeneratorRemote {
                     hist.addListToHist(uniformNumbers);
                     System.out.println("Distribution data: " + hist.getHist());
                     String pythonData = hist.getHist().toString().replace("[", "").replace("]", "");
-                    PythonExecutor.execute("src/randomgenerator/utility/evaluateUniform.py", pythonData, "");
+                    PythonExecutor.execute("src/randomgenerator/utility/evaluations/evaluateUniform.py", pythonData, "");
                 } else {
                     System.out.println("Empty list");
                 }
@@ -99,7 +99,7 @@ public class GeneratorRemote {
                     System.out.println("Probability of hitting the segment = " + pSegments);
                     String pythonData = hist.getHist().toString().replace("[", "").replace("]", "");
                     String pythonData2 = pSegments.toString().replace("[", "").replace("]", "");
-                    PythonExecutor.execute("src/randomgenerator/utility/evaluateAny.py", pythonData, pythonData2);
+                    PythonExecutor.execute("src/randomgenerator/utility/evaluations/evaluateAny.py", pythonData, pythonData2);
                 } else {
                     System.out.println("Empty list");
                 }
