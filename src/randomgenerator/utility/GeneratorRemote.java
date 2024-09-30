@@ -2,9 +2,9 @@ package randomgenerator.utility;
 
 import randomgenerator.service.Histogram;
 import randomgenerator.service.RandomGenerator;
-import randomgenerator.distributions.CustomDistribution;
+import randomgenerator.distributions.impl.CustomDistribution;
 import randomgenerator.distributions.Distribution;
-import randomgenerator.distributions.UniformDistribution;
+import randomgenerator.distributions.impl.UniformDistribution;
 
 import java.io.IOException;
 import java.util.List;

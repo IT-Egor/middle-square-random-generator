@@ -1,4 +1,6 @@
-package randomgenerator.distributions;
+package randomgenerator.distributions.impl;
+
+import randomgenerator.distributions.Distribution;
 
 public class CustomDistribution implements Distribution {
 

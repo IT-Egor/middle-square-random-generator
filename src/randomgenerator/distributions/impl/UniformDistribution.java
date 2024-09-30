@@ -1,4 +1,6 @@
-package randomgenerator.distributions;
+package randomgenerator.distributions.impl;
+
+import randomgenerator.distributions.Distribution;
 
 public class UniformDistribution implements Distribution {
     private final double left = 0.;
