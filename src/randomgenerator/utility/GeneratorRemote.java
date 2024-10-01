@@ -15,8 +15,6 @@ public class GeneratorRemote {
     Distribution customDistribution;
     Distribution uniformDistribution;
     private List<Double> uniformNumbers;
-    private List<Double> customNumbers;
-    private List<Integer> pSegments;
 
     public GeneratorRemote() {
         System.out.println("Middle square random generator");
@@ -31,13 +29,10 @@ public class GeneratorRemote {
         System.out.println("AUTO/MANUAL (A/M)");
         Scanner scanner = new Scanner(System.in);
         String mode = scanner.next();
-        switch (mode.toUpperCase()) {
-            case "M":
-                rg = new RandomGenerator(System.currentTimeMillis(), Mode.MANUAL);
-                break;
-
-            default:
-                rg = new RandomGenerator();
+        if (mode.toUpperCase().equals("M")) {
+            rg = new RandomGenerator(System.currentTimeMillis(), Mode.MANUAL);
+        } else {
+            rg = new RandomGenerator();
         }
         return rg;
     }
@@ -55,8 +50,8 @@ public class GeneratorRemote {
     }
 
     public void remote(String action) throws IOException, InterruptedException {
-
-
+        List<Double> customNumbers;
+        List<Integer> pSegments;
         Scanner scanner = new Scanner(System.in);
         Histogram hist;
         int n = 0;
@@ -77,8 +72,8 @@ public class GeneratorRemote {
 
                 if (uniformNumbers != null) {
                     hist.addListToHist(uniformNumbers);
-                    System.out.println("Distribution data: " + hist.getHist());
-                    String pythonData = hist.getHist().toString().replace("[", "").replace("]", "");
+                    System.out.println("Distribution data: " + hist.getHistValues());
+                    String pythonData = hist.getHistValues().toString().replace("[", "").replace("]", "");
                     PythonExecutor.execute("src/randomgenerator/service/evaluations/evaluateUniform.py", pythonData, "");
                 } else {
                     System.out.println("Empty list");
@@ -95,9 +90,9 @@ public class GeneratorRemote {
                     customNumbers = rg.generateSequenceWithDistribution(uniformNumbers, customDistribution);
                     hist.addListToHist(customNumbers);
                     pSegments = hist.getProbabilityOfHittingTheSegment();
-                    System.out.println("Distribution data: " + hist.getHist());
+                    System.out.println("Distribution data: " + hist.getHistValues());
                     System.out.println("Probability of hitting the segment = " + pSegments);
-                    String pythonData = hist.getHist().toString().replace("[", "").replace("]", "");
+                    String pythonData = hist.getHistValues().toString().replace("[", "").replace("]", "");
                     String pythonData2 = pSegments.toString().replace("[", "").replace("]", "");
                     PythonExecutor.execute("src/randomgenerator/service/evaluations/evaluateAny.py", pythonData, pythonData2);
                 } else {

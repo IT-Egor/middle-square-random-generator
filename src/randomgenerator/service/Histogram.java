@@ -6,30 +6,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Histogram {
-    private List<Integer> histogram;
-    private int segmentsNumber;
-    private double left;
-    private double right;
-    private Distribution distribution;
+    private final List<Integer> histogramValues;
+    private final int segmentsNumber;
+    private final double left;
+    private final double right;
+    private final Distribution distribution;
 
     public Histogram(int segmentsNumber, Distribution distribution) {
         this.segmentsNumber = segmentsNumber;
         this.distribution = distribution;
         this.left = distribution.getLeft();
         this.right = distribution.getRight();
-        this.histogram = new ArrayList<>(segmentsNumber);
+        this.histogramValues = new ArrayList<>(segmentsNumber);
         for (int i = 0; i < segmentsNumber; i++) {
-            histogram.add(0);
+            histogramValues.add(0);
         }
     }
 
-    public List<Integer> getHist() {
-        return histogram;
+    public List<Integer> getHistValues() {
+        return histogramValues;
     }
 
     public void addToHist(Double value) {
         int partIndex = (int) (((value - left) / (right - left)) * segmentsNumber);
-        histogram.set(partIndex, histogram.get(partIndex)+1);
+        histogramValues.set(partIndex, histogramValues.get(partIndex)+1);
     }
 
     public void addListToHist(List<Double> values) {
@@ -40,13 +40,13 @@ public class Histogram {
 
     public void clearHist() {
         for (int i = 0; i < segmentsNumber; i++) {
-            histogram.set(i, 0);
+            histogramValues.set(i, 0);
         }
     }
 
     public int getHistSum() {
         int sum = 0;
-        for (int part : histogram) {
+        for (int part : histogramValues) {
             sum += part;
         }
         return sum;
