@@ -1,11 +1,14 @@
 package randomgenerator.distributions;
 
 public interface Distribution {
-    double f(double x);
+    //probabilityDensityFunction
+    double pdf(double x);
 
-    double F(double x);
+    //cumulativeDistributionFunction
+    double cdf(double x);
 
-    double x(double F);
+    //quantileFunction
+    double qf(double cdf);
 
     double getLeft();
 

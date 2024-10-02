@@ -98,14 +98,9 @@ public class GeneratorRemote {
                 } else {
                     System.out.println("Empty list");
                 }
-
                 break;
 
-            case "0":
-                System.out.println("\nExit");
-                break;
-
-            default:
+            case "4":
                 if (rg.getMode() == Mode.MANUAL) {
                     System.out.print("\nSeed = ");
                     long seed = scanner.nextLong();
@@ -113,6 +108,15 @@ public class GeneratorRemote {
                 } else {
                     System.out.println("\nCommand not found");
                 }
+                break;
+
+            case "0":
+                System.out.println("\nExit");
+                break;
+
+            default:
+                System.out.println("\nCommand not found");
+
         }
     }
 }

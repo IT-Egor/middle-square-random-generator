@@ -79,7 +79,7 @@ public class Histogram {
                 segment = segments.get(i);
             }
             double prevSegment = segments.get(i - 1);
-            pSegments.add((int) ((distribution.F(segment) - distribution.F(prevSegment)) * getHistSum()));
+            pSegments.add((int) ((distribution.cdf(segment) - distribution.cdf(prevSegment)) * getHistSum()));
         }
         return pSegments;
     }

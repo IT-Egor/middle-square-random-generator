@@ -3,25 +3,25 @@ package randomgenerator.distributions.impl;
 import randomgenerator.distributions.Distribution;
 
 public class CustomDistribution implements Distribution {
-
     private final double left = 0.;
     private final double right = 6.;
+    private final double height = 2./9;
 
     @Override
-    public double f(double x) {
+    public double pdf(double x) {
         if (0 <= x && x <= 1) {
-            return 2./9 * x;
+            return height * x;
         } else if (1 < x && x <= 4) {
-            return 2./9;
+            return height;
         } else if (4 < x && x <= 6) {
-            return 1./9;
+            return height / 2;
         } else {
             return 0;
         }
     }
 
     @Override
-    public double F(double x) {
+    public double cdf(double x) {
         if (0 <= x && x <= 1) {
             return 1./9 * x * x;
         } else if (1 < x && x <= 4) {
@@ -36,14 +36,14 @@ public class CustomDistribution implements Distribution {
     }
 
     @Override
-    public double x(double F) {
-        if (0 <= F && F <= 1./9) {
-            return 3 * Math.sqrt(F);
-        } else if (1./9 < F && F <= 7./9) {
-            return 9./2 * F + 1./2;
-        } else if (7./9 < F && F <= 1) {
-            return 9 * F - 3;
-        } else if (F > 1) {
+    public double qf(double cdf) {
+        if (0 <= cdf && cdf <= 1./9) {
+            return 3 * Math.sqrt(cdf);
+        } else if (1./9 < cdf && cdf <= 7./9) {
+            return 9./2 * cdf + 1./2;
+        } else if (7./9 < cdf && cdf <= 1) {
+            return 9 * cdf - 3;
+        } else if (cdf > 1) {
             return 0;
         } else {
             return 0;

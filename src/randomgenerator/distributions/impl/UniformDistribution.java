@@ -5,18 +5,19 @@ import randomgenerator.distributions.Distribution;
 public class UniformDistribution implements Distribution {
     private final double left = 0.;
     private final double right = 1.;
+    private final double height = 1. / (right - left);
 
     @Override
-    public double f(double x) {
+    public double pdf(double x) {
         if (x < left || x > right) {
             return 0;
         } else {
-            return 1. / (right - left);
+            return height;
         }
     }
 
     @Override
-    public double F(double x) {
+    public double cdf(double x) {
         if (x < left) {
             return 0;
         } else if (x > right) {
@@ -27,8 +28,12 @@ public class UniformDistribution implements Distribution {
     }
 
     @Override
-    public double x(double F) {
-        return 0;
+    public double qf(double cdf) {
+        if (cdf < 0 || cdf > 1) {
+            return 0;
+        } else {
+            return cdf * (right - left) + left;
+        }
     }
 
     @Override

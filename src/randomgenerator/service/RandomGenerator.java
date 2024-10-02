@@ -82,7 +82,7 @@ public class RandomGenerator {
     public List<Double> generateSequenceWithDistribution(List<Double> uniformValues, Distribution distribution) {
         List<Double> values = new ArrayList<>();
         for (Double uniformValue : uniformValues) {
-            values.add(distribution.x(uniformValue));
+            values.add(distribution.qf(uniformValue));
         }
         return values;
     }
