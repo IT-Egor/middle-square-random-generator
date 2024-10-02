@@ -14,5 +14,5 @@ y = np.array([sum(observed_frequencies)/len(observed_frequencies)]*len(observed_
 
 plt.bar(x, observed_frequencies)
 plt.plot(x, y, color="red")
-plt.title(f"P = {p_value}")
+plt.title(f"P = {round(p_value, 2)}")
 plt.show()

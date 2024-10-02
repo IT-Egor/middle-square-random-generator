@@ -21,6 +21,6 @@ x = np.arange(1, len(observed_frequencies)+1)
 width = 0.35
 plt.bar(x - width/2, observed_frequencies, width=width, color="black", label="Observed")
 plt.bar(x + width/2, expected_frequencies, width=width, color="red", label="Expected")
-plt.title(f"P = {p_value}")
+plt.title(f"P = {round(p_value, 2)}")
 plt.legend()
 plt.show()
