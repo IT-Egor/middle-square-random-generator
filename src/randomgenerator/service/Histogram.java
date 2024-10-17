@@ -62,8 +62,9 @@ public class Histogram {
 
     public List<Double> getSegments() {
         List<Double> intervals = new ArrayList<>(segmentsNumber);
-        for (double i = 0; i < right; i += right / segmentsNumber) {
-            intervals.add(i);
+        double increment = (right - left) / segmentsNumber;
+        for (double segment = 0; segment < right; segment += increment) {
+            intervals.add(segment);
         }
         return intervals;
     }
