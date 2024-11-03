@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class RandomGenerator {
     private Long seed;
     private Mode mode;
+    private final int minSequenceLength = 20_000;
 
     public RandomGenerator(Long seed) {
         this.seed = seed;
@@ -53,7 +54,7 @@ public class RandomGenerator {
 
     public List<Double> generateUniformDistributionSequence() {
         List<Double> values = new ArrayList<>();
-        while (values.size() < 20_000) {
+        while (values.size() < minSequenceLength) {
             if (mode == Mode.AUTO) {
                 updateSeed();
             } else {
