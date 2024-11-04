@@ -88,6 +88,15 @@ public class RandomGenerator {
         return values;
     }
 
+    public List<Double> generateSequenceWithDistribution(Distribution distribution) {
+        List<Double> values = new ArrayList<>();
+        List<Double> uniformValues = generateUniformDistributionSequence();
+        for (Double uniformValue : uniformValues) {
+            values.add(distribution.qf(uniformValue));
+        }
+        return values;
+    }
+
     private Long generateNext(Long x) {
         return ((x * x) >> 16) & 0xffffffffL;
     }
