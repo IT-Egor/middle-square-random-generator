@@ -30,7 +30,7 @@ public class SimulationByEventsRemote {
             seed1 = 1727707011101L;
             seed2 = 1726506092498L;
         } else {
-            System.out.print("Enter number of requests: ");
+            System.out.print("Enter number of requests (< 20_000): ");
             numberOfRequests = scanner.nextInt();
             System.out.print("Enter number of channels: ");
             numberOfChannels = scanner.nextInt();
