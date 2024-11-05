@@ -2,6 +2,7 @@ package mds.model;
 
 import java.util.*;
 import java.lang.Math;
+import java.util.stream.Stream;
 
 public class Simulation {
     //------------------------------------input------------------------------------
@@ -40,7 +41,7 @@ public class Simulation {
 
     //----------------------------------------------arrays-----------------------------------------------
     // OCP[i] — признак занятости i-го канала (0 — канал свободен, 1 — канал занят)
-    private final List<Boolean> busyChannels;
+    private final Boolean[] busyChannels;
     // TD[i] — ожидаемый момент выхода заявки из i-го канала (время, прошедшее с начала моделирования).
     private final double[] channelReleaseExpectedTime;
     // TOS[i] — счетчик суммарного времени занятости i-го канала —
@@ -56,7 +57,7 @@ public class Simulation {
     // S — номер канала, который в текущем состоянии системы освободится первым (в момент времени MIN)
     private int firstReleasedChannelNumber;
     // M - количество заявок в системе
-    private int numberOfRequestsInSystem;
+    private int requestsInSystemCount;
     // DTA — время между приходами заявок (генерируемая в процессе моделирования случайная величина)
     private Iterator<Double> timeBetweenRequests;
     // DTS — время обслуживания заявки в канале (генерируемая в процессе моделирования случайная величина)
@@ -80,10 +81,7 @@ public class Simulation {
 
         serviceTime = 1.0 / m;
 
-        busyChannels = new ArrayList<>();
-        for (int i = 0; i < numberOfChannels; i++) {
-            busyChannels.add(false);
-        }
+        busyChannels = new Boolean[numberOfChannels];
         channelReleaseExpectedTime = new double[numberOfChannels];
         chanelTotalBusyTime = new double[numberOfChannels];
         systemTotalTimeWithRequests = new double[numberOfChannels + queueSize + 1];
@@ -112,10 +110,10 @@ public class Simulation {
         bounceCount = 0;
         nearestMomentOfRequestRelease = 0;
         firstReleasedChannelNumber = 0;
-        numberOfRequestsInSystem = 0;
+        requestsInSystemCount = 0;
         iteratorsSetup();
 
-        Collections.fill(busyChannels, false);
+        Arrays.fill(busyChannels, false);
         Arrays.fill(channelReleaseExpectedTime, Integer.MAX_VALUE);
         Arrays.fill(chanelTotalBusyTime, 0);
         Arrays.fill(systemTotalTimeWithRequests, 0);
@@ -141,17 +139,20 @@ public class Simulation {
             } while (i <= numberOfChannels);
 
             if (timeOfNextRequest < nearestMomentOfRequestRelease) {
-                numberOfRequestsInSystem = queueLength + (int) busyChannels.stream().filter(b -> b).count();
-                systemTotalTimeWithRequests[numberOfRequestsInSystem] += timeOfNextRequest - modelTime;
+                requestsInSystemCount = queueLength
+                        + (int) Stream.of(busyChannels)
+                                .filter(isChanelFree -> isChanelFree)
+                                .count();
+                systemTotalTimeWithRequests[requestsInSystemCount] += timeOfNextRequest - modelTime;
                 modelTime = timeOfNextRequest;
 
                 i = 1;
                 boolean breakFlag = false;
                 do {
-                    if (busyChannels.get(i - 1)) {
+                    if (busyChannels[i - 1]) {
                         i++;
                     } else {
-                        busyChannels.set(i - 1, true);
+                        busyChannels[i - 1] = true;
 
                         double dts = requestServiceTime.next();
                         channelReleaseExpectedTime[i - 1] = modelTime + dts;
@@ -173,14 +174,18 @@ public class Simulation {
                 timeOfNextRequest += timeBetweenRequests.next();
                 requestsCount++;
             } else {
-                numberOfRequestsInSystem = queueLength + (int) busyChannels.stream().filter(b -> b).count();
-                systemTotalTimeWithRequests[numberOfRequestsInSystem] += channelReleaseExpectedTime[firstReleasedChannelNumber - 1] - modelTime;
+                requestsInSystemCount = queueLength
+                        + (int) Stream.of(busyChannels)
+                                .filter(isChanelFree -> isChanelFree)
+                                .count();
+                systemTotalTimeWithRequests[requestsInSystemCount]
+                        += channelReleaseExpectedTime[firstReleasedChannelNumber - 1] - modelTime;
 
                 modelTime = channelReleaseExpectedTime[firstReleasedChannelNumber - 1];
                 servicedRequestsCount++;
 
                 if (queueLength == 0) {
-                    busyChannels.set(firstReleasedChannelNumber - 1, false);
+                    busyChannels[firstReleasedChannelNumber - 1] = false;
                     channelReleaseExpectedTime[firstReleasedChannelNumber - 1] = Integer.MAX_VALUE;
                 } else {
                     queueLength--;
@@ -212,7 +217,7 @@ public class Simulation {
         System.out.println();
         System.out.println("nearestMomentOfRequestRelease = " + nearestMomentOfRequestRelease);
         System.out.println("firstReleasedChannelNumber = " + firstReleasedChannelNumber);
-        System.out.println("numberOfRequestsInSystem = " + numberOfRequestsInSystem);
+        System.out.println("requestsInSystemCount = " + requestsInSystemCount);
     }
 
     public void printResults() {
