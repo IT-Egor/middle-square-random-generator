@@ -15,13 +15,13 @@ public class RandomGenerator {
 
     public RandomGenerator(Long seed) {
         this.seed = seed;
-        mode = Mode.AUTO;
+        mode = Mode.MANUAL;
     }
 
-    public RandomGenerator(Long seed, Mode mode) {
-        this.seed = seed;
-        this.mode = mode;
-    }
+//    public RandomGenerator(Long seed, Mode mode) {
+//        this.seed = seed;
+//        this.mode = mode;
+//    }
 
     public RandomGenerator() {
         mode = Mode.AUTO;

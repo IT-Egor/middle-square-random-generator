@@ -30,7 +30,7 @@ public class GeneratorRemote {
         Scanner scanner = new Scanner(System.in);
         String mode = scanner.next();
         if (mode.toUpperCase().equals("M")) {
-            rg = new RandomGenerator(System.currentTimeMillis(), Mode.MANUAL);
+            rg = new RandomGenerator(System.currentTimeMillis());
         } else {
             rg = new RandomGenerator();
         }

@@ -15,8 +15,9 @@ public class Simulation {
     private final double l;
     // интенсивность потока обработки заявок (мю)
     private final double m;
-
+    // массив случайных чисел для времени между заявками
     private final List<Double> timeBetweenRequestsSequence;
+    // массив случайных чисел для времени обработки заявок
     private final List<Double> requestServiceTimeSequence;
     //------------------------------------input------------------------------------
 
@@ -33,7 +34,7 @@ public class Simulation {
     private int queueLength;
     // LOS — счетчик отказов (заявок, поучивших отказ в обслуживании)
     private int bounceCount;
-
+    // 1/m
     private final double serviceTime;
     //--------------------------------------------statistics---------------------------------------------
 
@@ -62,23 +63,22 @@ public class Simulation {
     private Iterator<Double> requestServiceTime;
     //----------------------------------------------helpers----------------------------------------------
 
-
     public Simulation(int numberOfRequests,
                       int numberOfChannels,
                       int queueSize,
                       double l,
-                      double numberOfRequestsInSystem,
+                      double m,
                       List<Double> timeBetweenRequestsSequence,
                       List<Double> requestServiceTimeSequence) {
         this.numberOfRequests = numberOfRequests;
         this.numberOfChannels = numberOfChannels;
         this.queueSize = queueSize;
         this.l = l;
-        this.m = numberOfRequestsInSystem;
+        this.m = m;
         this.timeBetweenRequestsSequence = timeBetweenRequestsSequence;
         this.requestServiceTimeSequence = requestServiceTimeSequence;
 
-        serviceTime = 1.0 / numberOfRequestsInSystem;
+        serviceTime = 1.0 / m;
 
         busyChannels = new ArrayList<>();
         for (int i = 0; i < numberOfChannels; i++) {
@@ -217,7 +217,7 @@ public class Simulation {
         System.out.println("numberOfRequestsInSystem = " + numberOfRequestsInSystem);
     }
 
-    public void printResult() {
+    public void printResults() {
         System.out.println("Кол-во заявок " + (bounceCount + servicedRequestsCount));
         System.out.println("Кол-во обработанных заявок " + servicedRequestsCount);
         System.out.println("Кол-во отказов " + bounceCount);
