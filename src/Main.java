@@ -56,14 +56,46 @@ public class Main {
     }
 
     public static void simulationRemote() {
-        RandomGenerator generator1 = new RandomGenerator(1727707011101L);
-        RandomGenerator generator2 = new RandomGenerator(1726506092498L);
+        // 10000
+        // 2
+        // 3
+        // 2
+        // 1
+        // 1727707011101
+        // 1726506092498
+
+        Scanner scanner = new Scanner(System.in);
+        int numberOfRequests;
+        int numberOfChannels;
+        int queueSize;
+        double l;
+        double m;
+        long seed1;
+        long seed2;
+
+        System.out.print("Enter number of requests: ");
+        numberOfRequests = scanner.nextInt();
+        System.out.print("Enter number of channels: ");
+        numberOfChannels = scanner.nextInt();
+        System.out.print("Enter queue size: ");
+        queueSize = scanner.nextInt();
+        System.out.print("Enter lambda: ");
+        l = scanner.nextDouble();
+        System.out.print("Enter m: ");
+        m = scanner.nextDouble();
+        System.out.print("Enter seed1: ");
+        seed1 = scanner.nextLong();
+        System.out.print("Enter seed2: ");
+        seed2 = scanner.nextLong();
+
+        RandomGenerator generator1 = new RandomGenerator(seed1);
+        RandomGenerator generator2 = new RandomGenerator(seed2);
         Simulation simulation = new Simulation(
-                10000,
-                2,
-                3,
-                2,
-                1,
+                numberOfRequests,
+                numberOfChannels,
+                queueSize,
+                l,
+                m,
                 generator1.generateUniformDistributionSequence(),
                 generator2.generateUniformDistributionSequence()
         );
