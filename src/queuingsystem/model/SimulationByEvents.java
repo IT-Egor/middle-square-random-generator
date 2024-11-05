@@ -1,10 +1,10 @@
-package mds.model;
+package queuingsystem.model;
 
 import java.util.*;
 import java.lang.Math;
 import java.util.stream.Stream;
 
-public class Simulation {
+public class SimulationByEvents {
     //------------------------------------input------------------------------------
     // N — максимальное число входящих заявок (условие окончания моделирования)
     private final int numberOfRequests;
@@ -64,13 +64,13 @@ public class Simulation {
     private Iterator<Double> requestServiceTime;
     //----------------------------------------------helpers----------------------------------------------
 
-    public Simulation(int numberOfRequests,
-                      int numberOfChannels,
-                      int queueSize,
-                      double inputIntensity,
-                      double serviceIntensity,
-                      List<Double> timeBetweenRequestsSequence,
-                      List<Double> requestServiceTimeSequence) {
+    public SimulationByEvents(int numberOfRequests,
+                              int numberOfChannels,
+                              int queueSize,
+                              double inputIntensity,
+                              double serviceIntensity,
+                              List<Double> timeBetweenRequestsSequence,
+                              List<Double> requestServiceTimeSequence) {
         this.numberOfRequests = numberOfRequests;
         this.numberOfChannels = numberOfChannels;
         this.queueSize = queueSize;
@@ -199,6 +199,8 @@ public class Simulation {
     }
 
     public void printStatus() {
+        int cutWidth = 22;
+        System.out.println("-".repeat(cutWidth) + "status" + "-".repeat(cutWidth));
         System.out.println("numberOfRequests = " + numberOfRequests);
         System.out.println("numberOfChannels = " + numberOfChannels);
         System.out.println("queueSize = " + queueSize);
@@ -218,31 +220,34 @@ public class Simulation {
         System.out.println("nearestMomentOfRequestRelease = " + nearestMomentOfRequestRelease);
         System.out.println("firstReleasedChannelNumber = " + firstReleasedChannelNumber);
         System.out.println("requestsInSystemCount = " + requestsInSystemCount);
+        System.out.println("-".repeat(cutWidth) + "status" + "-".repeat(cutWidth));
     }
 
     public void printResults() {
-        System.out.println("Кол-во заявок " + (bounceCount + servicedRequestsCount));
-        System.out.println("Кол-во обработанных заявок " + servicedRequestsCount);
-        System.out.println("Кол-во отказов " + bounceCount);
-        System.out.println("Модельное время " + modelTime);
-        System.out.println("Вероятности состояний СМО:");
+        int cutWidth = 22;
+        System.out.println("-".repeat(cutWidth) + "result" + "-".repeat(cutWidth));
+        System.out.println("number of requests " + (bounceCount + servicedRequestsCount));
+        System.out.println("number of serviced requests " + servicedRequestsCount);
+        System.out.println("number of bounces " + bounceCount);
+        System.out.println("model time " + modelTime);
+        System.out.println("Probabilities of queuing system states:");
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
             System.out.printf("p%d = %f%n", i, systemTotalTimeWithRequests[i] / modelTime);
         }
-        System.out.println("Вероятность отказа " + (double) bounceCount / (bounceCount + servicedRequestsCount));
-        System.out.println("Коэффициент загрузки " + (1 - systemTotalTimeWithRequests[0] / modelTime));
-        System.out.println("Пропускная способность " + (double) servicedRequestsCount / modelTime);
+        System.out.println("bounce probability " + (double) bounceCount / (bounceCount + servicedRequestsCount));
+        System.out.println("load factor " + (1 - systemTotalTimeWithRequests[0] / modelTime));
+        System.out.println("bandwidth " + (double) servicedRequestsCount / modelTime);
         double average = 0;
         for (int i = 1; i <= numberOfChannels + queueSize; i++) {
             average += i * systemTotalTimeWithRequests[i] / modelTime;
         }
-        System.out.println("Среднее число заявок " + average);
-        System.out.println("Среднее количество занятых каналов " + Arrays.stream(chanelTotalBusyTime).sum() / modelTime);
+        System.out.println("average number of requests " + average);
+        System.out.println("average number of busy channels " + Arrays.stream(chanelTotalBusyTime).sum() / modelTime);
         double sum = 0;
         for (int i = numberOfChannels + 1; i <= numberOfChannels + queueSize; i++) {
             sum += systemTotalTimeWithRequests[i] * (i - numberOfChannels);
         }
-        System.out.println("Средняя длина очереди " + sum / modelTime);
+        System.out.println("average queue length " + sum / modelTime);
         double b = 0;
         double c = 0;
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
@@ -251,6 +256,7 @@ public class Simulation {
         for (int i = 0; i < numberOfChannels; i++) {
             c += chanelTotalBusyTime[i];
         }
-        System.out.println("Среднее время ожидания " + (b - c) / numberOfRequests);
+        System.out.println("Average waiting time " + (b - c) / numberOfRequests);
+        System.out.println("-".repeat(cutWidth) + "status" + "-".repeat(cutWidth));
     }
 }
