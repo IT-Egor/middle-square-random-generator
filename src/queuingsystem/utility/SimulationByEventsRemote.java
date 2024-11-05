@@ -1,6 +1,6 @@
 package queuingsystem.utility;
 
-import queuingsystem.model.SimulationByEvents;
+import queuingsystem.simulation.SimulationByEvents;
 import randomgenerator.service.RandomGenerator;
 
 import java.util.List;

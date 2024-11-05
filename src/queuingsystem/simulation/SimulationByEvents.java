@@ -1,4 +1,4 @@
-package queuingsystem.model;
+package queuingsystem.simulation;
 
 import java.util.*;
 import java.lang.Math;
