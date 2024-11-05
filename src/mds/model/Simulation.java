@@ -190,7 +190,6 @@ public class Simulation {
                     chanelTotalBusyTime[firstReleasedChannelNumber - 1] += dts;
                 }
             }
-
         }
     }
 
