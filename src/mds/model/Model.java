@@ -1,13 +1,25 @@
 package mds.model;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.lang.Math;
+
 public class Model {
     //------------------------------------input------------------------------------
     // N — максимальное число входящих заявок (условие окончания моделирования)
-    private int numberOfRequests;
+    private final int numberOfRequests;
     // NK — количество каналов
-    private int numberOfChannels;
+    private final int numberOfChannels;
     // LMAX — максимально допустимая длина очереди
-    private int queueSize;
+    private final int queueSize;
+    // интенсивность потока заявок (лямбда)
+    private final double l;
+    // интенсивность потока обработки заявок (мю)
+    private final double m;
+
+    private final List<Double> timeBetweenRequestsSequence;
+    private final List<Double> requestServiceTimeSequence;
     //------------------------------------input------------------------------------
 
     //--------------------------------------------statistics---------------------------------------------
@@ -23,6 +35,8 @@ public class Model {
     private int queueLength;
     // LOS — счетчик отказов (заявок, поучивших отказ в обслуживании)
     private int bounceCount;
+
+    private double serviceTime;
     //--------------------------------------------statistics---------------------------------------------
 
     //----------------------------------------------arrays-----------------------------------------------
@@ -43,8 +57,89 @@ public class Model {
     // S — номер канала, который в текущем состоянии системы освободится первым (в момент времени MIN)
     private int firstReleasedChannelNumber;
     // DTA — время между приходами заявок (генерируемая в процессе моделирования случайная величина)
-    private int timeBetweenRequests;
+    private Iterator<Double> timeBetweenRequests;
     // DTS — время обслуживания заявки в канале (генерируемая в процессе моделирования случайная величина)
-    private int requestServiceTime;
+    private Iterator<Double> requestServiceTime;
     //----------------------------------------------helpers----------------------------------------------
+
+
+    public Model(int numberOfRequests,
+                 int numberOfChannels,
+                 int queueSize,
+                 double l,
+                 double m,
+                 List<Double> timeBetweenRequestsSequence,
+                 List<Double> requestServiceTimeSequence) {
+        this.numberOfRequests = numberOfRequests;
+        this.numberOfChannels = numberOfChannels;
+        this.queueSize = queueSize;
+        this.l = l;
+        this.m = m;
+        this.timeBetweenRequestsSequence = timeBetweenRequestsSequence;
+        this.requestServiceTimeSequence = requestServiceTimeSequence;
+
+        serviceTime = 1.0 / m;
+
+        busyChannels = new boolean[numberOfChannels];
+        channelReleaseExpectedTime = new int[numberOfChannels];
+        chanelTotalBusyTime = new int[numberOfChannels];
+        systemTotalTimeWithRequests = new int[numberOfChannels + queueSize + 1];
+
+        reset();
+        iteratorsSetup();
+    }
+
+    private void iteratorsSetup() {
+        timeBetweenRequests = timeBetweenRequestsSequence
+                .stream()
+                .map(randDouble -> -1.0/l * Math.log(randDouble))
+                .iterator();
+
+        requestServiceTime = requestServiceTimeSequence
+                .stream()
+                .map(randDouble -> -1 * serviceTime * Math.log(randDouble))
+                .iterator();
+    }
+
+    private void reset() {
+        modelTime = 0;
+        timeOfNextRequest = 0;
+        requestsCount = 0;
+        servedRequestsCount = 0;
+        queueLength = 0;
+        bounceCount = 0;
+        nearestMomentOfRequestRelease = 0;
+        firstReleasedChannelNumber = 0;
+        iteratorsSetup();
+
+        Arrays.fill(busyChannels, false);
+        Arrays.fill(channelReleaseExpectedTime, Integer.MAX_VALUE);
+        Arrays.fill(chanelTotalBusyTime, 0);
+        Arrays.fill(systemTotalTimeWithRequests, 0);
+    }
+
+    public Iterator<Double> getTimeBetweenRequests() {
+        return timeBetweenRequests;
+    }
+
+    public Iterator<Double> getRequestServiceTime() {
+        return requestServiceTime;
+    }
+
+    public void printStatus() {
+        System.out.println("numberOfRequests = " + numberOfRequests);
+        System.out.println("numberOfChannels = " + numberOfChannels);
+        System.out.println("queueSize = " + queueSize);
+        System.out.println("l = " + l);
+        System.out.println("m = " + m);
+        System.out.println("firstSequence = " + timeBetweenRequestsSequence.size());
+        System.out.println("secondSequence = " + requestServiceTimeSequence.size());
+        System.out.println();
+        System.out.println("modelTime = " + modelTime);
+        System.out.println("timeOfNextRequest = " + timeOfNextRequest);
+        System.out.println("requestsCount = " + requestsCount);
+        System.out.println("servedRequestsCount = " + servedRequestsCount);
+        System.out.println("queueLength = " + queueLength);
+        System.out.println("bounceCount = " + bounceCount);
+    }
 }
