@@ -13,9 +13,9 @@ public class Simulation {
     // LMAX — максимально допустимая длина очереди
     private final int queueSize;
     // интенсивность потока заявок (лямбда)
-    private final double l;
+    private final double inputIntensity;
     // интенсивность потока обработки заявок (мю)
-    private final double m;
+    private final double serviceIntensity;
     // массив случайных чисел для времени между заявками
     private final List<Double> timeBetweenRequestsSequence;
     // массив случайных чисел для времени обработки заявок
@@ -67,19 +67,19 @@ public class Simulation {
     public Simulation(int numberOfRequests,
                       int numberOfChannels,
                       int queueSize,
-                      double l,
-                      double m,
+                      double inputIntensity,
+                      double serviceIntensity,
                       List<Double> timeBetweenRequestsSequence,
                       List<Double> requestServiceTimeSequence) {
         this.numberOfRequests = numberOfRequests;
         this.numberOfChannels = numberOfChannels;
         this.queueSize = queueSize;
-        this.l = l;
-        this.m = m;
+        this.inputIntensity = inputIntensity;
+        this.serviceIntensity = serviceIntensity;
         this.timeBetweenRequestsSequence = timeBetweenRequestsSequence;
         this.requestServiceTimeSequence = requestServiceTimeSequence;
 
-        serviceTime = 1.0 / m;
+        serviceTime = 1.0 / serviceIntensity;
 
         busyChannels = new Boolean[numberOfChannels];
         channelReleaseExpectedTime = new double[numberOfChannels];
@@ -92,7 +92,7 @@ public class Simulation {
     private void iteratorsSetup() {
         timeBetweenRequests = timeBetweenRequestsSequence
                 .stream()
-                .map(randDouble -> -1.0 / l * Math.log(randDouble))
+                .map(randDouble -> -1.0 / inputIntensity * Math.log(randDouble))
                 .iterator();
 
         requestServiceTime = requestServiceTimeSequence
@@ -202,8 +202,8 @@ public class Simulation {
         System.out.println("numberOfRequests = " + numberOfRequests);
         System.out.println("numberOfChannels = " + numberOfChannels);
         System.out.println("queueSize = " + queueSize);
-        System.out.println("l = " + l);
-        System.out.println("m = " + m);
+        System.out.println("inputIntensity = " + inputIntensity);
+        System.out.println("serviceIntensity = " + serviceIntensity);
         System.out.println("firstSequence = " + timeBetweenRequestsSequence.size());
         System.out.println("secondSequence = " + requestServiceTimeSequence.size());
         System.out.println();
