@@ -18,11 +18,6 @@ public class RandomGenerator {
         mode = Mode.MANUAL;
     }
 
-//    public RandomGenerator(Long seed, Mode mode) {
-//        this.seed = seed;
-//        this.mode = mode;
-//    }
-
     public RandomGenerator() {
         mode = Mode.AUTO;
         updateSeed();

@@ -40,14 +40,14 @@ public class Simulation {
 
     //----------------------------------------------arrays-----------------------------------------------
     // OCP[i] — признак занятости i-го канала (0 — канал свободен, 1 — канал занят)
-    private List<Boolean> busyChannels;
+    private final List<Boolean> busyChannels;
     // TD[i] — ожидаемый момент выхода заявки из i-го канала (время, прошедшее с начала моделирования).
-    private double[] channelReleaseExpectedTime;
+    private final double[] channelReleaseExpectedTime;
     // TOS[i] — счетчик суммарного времени занятости i-го канала —
     // сколько единиц модельного времени в течение всего процесса моделирования канал был занят
-    private double[] chanelTotalBusyTime;
+    private final double[] chanelTotalBusyTime;
     // TL[M] — суммарное время пребывания системы в состоянии, когда в ней ровно M заявок
-    private double[] systemTotalTimeWithRequests;
+    private final double[] systemTotalTimeWithRequests;
     //----------------------------------------------arrays-----------------------------------------------
 
     //----------------------------------------------helpers----------------------------------------------
@@ -94,13 +94,31 @@ public class Simulation {
     private void iteratorsSetup() {
         timeBetweenRequests = timeBetweenRequestsSequence
                 .stream()
-                .map(randDouble -> -1.0/l * Math.log(randDouble))
+                .map(randDouble -> -1.0 / l * Math.log(randDouble))
                 .iterator();
 
         requestServiceTime = requestServiceTimeSequence
                 .stream()
                 .map(randDouble -> -1 * serviceTime * Math.log(randDouble))
                 .iterator();
+    }
+
+    private void reset() {
+        modelTime = 0;
+        timeOfNextRequest = 0;
+        requestsCount = 0;
+        servicedRequestsCount = 0;
+        queueLength = 0;
+        bounceCount = 0;
+        nearestMomentOfRequestRelease = 0;
+        firstReleasedChannelNumber = 0;
+        numberOfRequestsInSystem = 0;
+        iteratorsSetup();
+
+        Collections.fill(busyChannels, false);
+        Arrays.fill(channelReleaseExpectedTime, Integer.MAX_VALUE);
+        Arrays.fill(chanelTotalBusyTime, 0);
+        Arrays.fill(systemTotalTimeWithRequests, 0);
     }
 
     public void run() {
@@ -115,9 +133,9 @@ public class Simulation {
 
             int i = 1;
             do {
-                if (channelReleaseExpectedTime[i-1] < nearestMomentOfRequestRelease) {
+                if (channelReleaseExpectedTime[i - 1] < nearestMomentOfRequestRelease) {
                     firstReleasedChannelNumber = i;
-                    nearestMomentOfRequestRelease = channelReleaseExpectedTime[i-1];
+                    nearestMomentOfRequestRelease = channelReleaseExpectedTime[i - 1];
                 }
                 i++;
             } while (i <= numberOfChannels);
@@ -176,24 +194,6 @@ public class Simulation {
         }
     }
 
-    private void reset() {
-        modelTime = 0;
-        timeOfNextRequest = 0;
-        requestsCount = 0;
-        servicedRequestsCount = 0;
-        queueLength = 0;
-        bounceCount = 0;
-        nearestMomentOfRequestRelease = 0;
-        firstReleasedChannelNumber = 0;
-        numberOfRequestsInSystem = 0;
-        iteratorsSetup();
-
-        Collections.fill(busyChannels, false);
-        Arrays.fill(channelReleaseExpectedTime, Integer.MAX_VALUE);
-        Arrays.fill(chanelTotalBusyTime, 0);
-        Arrays.fill(systemTotalTimeWithRequests, 0);
-    }
-
     public void printStatus() {
         System.out.println("numberOfRequests = " + numberOfRequests);
         System.out.println("numberOfChannels = " + numberOfChannels);
@@ -223,7 +223,7 @@ public class Simulation {
         System.out.println("Модельное время " + modelTime);
         System.out.println("Вероятности состояний СМО:");
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
-            System.out.println(String.format("p%d = %f", i, systemTotalTimeWithRequests[i] / modelTime));
+            System.out.printf("p%d = %f%n", i, systemTotalTimeWithRequests[i] / modelTime);
         }
         System.out.println("Вероятность отказа " + (double) bounceCount / (bounceCount + servicedRequestsCount));
         System.out.println("Коэффициент загрузки " + (1 - systemTotalTimeWithRequests[0] / modelTime));

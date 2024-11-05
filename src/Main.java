@@ -1,7 +1,6 @@
 import mds.model.Simulation;
 import randomgenerator.service.RandomGenerator;
 import randomgenerator.utility.GeneratorRemote;
-import randomgenerator.utility.Mode;
 
 import java.io.IOException;
 import java.util.Scanner;
