@@ -1,5 +1,5 @@
 import randomgenerator.utility.GeneratorRemote;
-import randomgenerator.utility.SimulationByEventsRemote;
+import queuingsystem.utility.SimulationByEventsRemote;
 
 import java.io.IOException;
 import java.util.Scanner;

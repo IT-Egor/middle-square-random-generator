@@ -1,4 +1,4 @@
-package randomgenerator.utility;
+package queuingsystem.utility;
 
 import queuingsystem.model.SimulationByEvents;
 import randomgenerator.service.RandomGenerator;
