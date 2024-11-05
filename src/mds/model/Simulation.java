@@ -89,7 +89,6 @@ public class Simulation {
         systemTotalTimeWithRequests = new double[numberOfChannels + queueSize + 1];
 
         reset();
-        iteratorsSetup();
     }
 
     private void iteratorsSetup() {
