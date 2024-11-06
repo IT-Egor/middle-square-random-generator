@@ -76,7 +76,7 @@ public class Main {
         } else {
             sr.simulationSetup(false);
         }
-        sr.runSimulation();
+        sr.printSimulationResults();
     }
 
     public static void printMenu() {

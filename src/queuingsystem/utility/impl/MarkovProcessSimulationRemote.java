@@ -59,7 +59,7 @@ public class MarkovProcessSimulationRemote implements SimulationRemote {
     }
 
     @Override
-    public void runSimulation() {
+    public void printSimulationResults() {
         if (!isSetup) {
             simulationSetup(true);
         }
