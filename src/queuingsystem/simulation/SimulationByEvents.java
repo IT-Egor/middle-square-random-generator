@@ -249,12 +249,9 @@ public class SimulationByEvents {
         }
         System.out.println("average queue length: " + sum / modelTime);
         double b = 0;
-        double c = 0;
+        double c = Arrays.stream(chanelTotalBusyTime).sum();
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
             b += i * systemTotalTimeWithRequests[i];
-        }
-        for (int i = 0; i < numberOfChannels; i++) {
-            c += chanelTotalBusyTime[i];
         }
         System.out.println("average waiting time: " + (b - c) / numberOfRequests);
         System.out.println("-".repeat(cutWidth) + "status" + "-".repeat(cutWidth));
