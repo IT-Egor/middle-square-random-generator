@@ -1,5 +1,7 @@
+import queuingsystem.utility.impl.MarkovProcessSimulationRemote;
+import queuingsystem.utility.SimulationRemote;
 import randomgenerator.utility.GeneratorRemote;
-import queuingsystem.utility.SimulationByEventsRemote;
+import queuingsystem.utility.impl.SimulationByEventsRemote;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -55,9 +57,20 @@ public class Main {
     }
 
     public static void simulationRemote() {
-        SimulationByEventsRemote sr = new SimulationByEventsRemote();
-        System.out.print("Use default values? (y/n) ");
+        SimulationRemote sr;
         Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Markov or by events simulation? (m/e) ");
+        String remote = scanner.next();
+        if (remote.equalsIgnoreCase("m")) {
+            sr = new MarkovProcessSimulationRemote();
+        } else if (remote.equalsIgnoreCase("e")) {
+            sr = new SimulationByEventsRemote();
+        } else {
+            return;
+        }
+
+        System.out.print("Use default values? (y/n) ");
         if (scanner.next().equals("y")) {
             sr.simulationSetup(true);
         } else {

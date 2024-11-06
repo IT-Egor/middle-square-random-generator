@@ -1,12 +1,13 @@
-package queuingsystem.utility;
+package queuingsystem.utility.impl;
 
 import queuingsystem.simulation.SimulationByEvents;
+import queuingsystem.utility.SimulationRemote;
 import randomgenerator.service.RandomGenerator;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class SimulationByEventsRemote {
+public class SimulationByEventsRemote implements SimulationRemote {
     private Scanner scanner = new Scanner(System.in);
     private int numberOfRequests;
     private int numberOfChannels;
@@ -20,6 +21,7 @@ public class SimulationByEventsRemote {
     boolean isSetup = false;
     SimulationByEvents simulationByEvents;
 
+    @Override
     public void simulationSetup(boolean defaultValues) {
         if (defaultValues) {
             numberOfRequests = 10000;
@@ -64,13 +66,17 @@ public class SimulationByEventsRemote {
         isSetup = true;
     }
 
+    @Override
     public void runSimulation() {
         if (!isSetup) {
             simulationSetup(true);
         }
         simulationByEvents.run();
+        int cutWidth = 22;
+        System.out.println("=".repeat(cutWidth) + "Events" + "=".repeat(cutWidth));
         simulationByEvents.printStatus();
         System.out.println();
         simulationByEvents.printResults();
+        System.out.println("=".repeat(cutWidth) + "Events" + "=".repeat(cutWidth));
     }
 }

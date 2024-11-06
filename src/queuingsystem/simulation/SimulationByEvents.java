@@ -254,6 +254,6 @@ public class SimulationByEvents {
             b += i * systemTotalTimeWithRequests[i];
         }
         System.out.println("average waiting time: " + (b - c) / numberOfRequests);
-        System.out.println("-".repeat(cutWidth) + "status" + "-".repeat(cutWidth));
+        System.out.println("-".repeat(cutWidth) + "result" + "-".repeat(cutWidth));
     }
 }

@@ -115,7 +115,23 @@ public class MarkovProcessSimulation {
         return new Object[]{minIndex, minTransitionTime};
     }
 
+    public void printStatus() {
+        int cutWidth = 22;
+        System.out.println("-".repeat(cutWidth) + "status" + "-".repeat(cutWidth));
+        System.out.println("numberOfRequests = " + numberOfRequests);
+        System.out.println("numberOfChannels = " + numberOfChannels);
+        System.out.println("queueSize = " + queueSize);
+        System.out.println("number of states = " + numberOfStates);
+        System.out.println("inputIntensity = " + inputIntensity);
+        System.out.println("serviceIntensity = " + serviceIntensity);
+        System.out.println("firstSequence = " + timeBetweenRequestsSequence.size());
+        System.out.println("modelTime = " + modelTime);
+        System.out.println("-".repeat(cutWidth) + "status" + "-".repeat(cutWidth));
+    }
+
     public void printResults() {
+        int cutWidth = 22;
+        System.out.println("-".repeat(cutWidth) + "result" + "-".repeat(cutWidth));
         System.out.println("probabilities of queuing system states:");
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
             System.out.printf("p%d = %f%n", i, stateTotalTime[i] / modelTime);
@@ -123,6 +139,11 @@ public class MarkovProcessSimulation {
         System.out.println("rejection probability: " + stateTotalTime[numberOfStates-1] / modelTime);
         System.out.println("load factor: " + (1 - stateTotalTime[0] / modelTime));
         System.out.println("bandwidth: " + (double) servicedRequestsCount / modelTime);
+        double average = 0;
+        for (int i = 1; i < numberOfStates; i++) {
+            average += i * stateTotalTime[i] / modelTime;
+        }
+        System.out.println("average number of requests: " + average);
         double servicedRequestsAverage = 0;
         for (int i = 0; i < numberOfStates; i++) {
             if (i < numberOfChannels) {
@@ -132,11 +153,6 @@ public class MarkovProcessSimulation {
             }
         }
         System.out.println("serviced requests average: " + servicedRequestsAverage / modelTime);
-        double average = 0;
-        for (int i = 1; i < numberOfStates; i++) {
-            average += i * stateTotalTime[i] / modelTime;
-        }
-        System.out.println("average number of requests: " + average);
         double sum = 0;
         for (int i = numberOfChannels + 1; i <= numberOfChannels + queueSize; i++) {
             sum += stateTotalTime[i] * (i - numberOfChannels);
@@ -148,5 +164,6 @@ public class MarkovProcessSimulation {
             b += i * stateTotalTime[i];
         }
         System.out.println("average waiting time: " + (b - c) / numberOfRequests);
+        System.out.println("-".repeat(cutWidth) + "result" + "-".repeat(cutWidth));
     }
 }
