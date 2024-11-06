@@ -34,7 +34,7 @@ public class SimulationByEvents {
     // L — текущая длина очереди
     private int queueLength;
     // LOS — счетчик отказов (заявок, поучивших отказ в обслуживании)
-    private int refusalCount;
+    private int rejectionsCount;
     // 1/m
     private final double serviceTime;
     //--------------------------------------------statistics---------------------------------------------
@@ -107,7 +107,7 @@ public class SimulationByEvents {
         requestsCount = 0;
         servicedRequestsCount = 0;
         queueLength = 0;
-        refusalCount = 0;
+        rejectionsCount = 0;
         nearestMomentOfRequestRelease = 0;
         firstReleasedChannelNumber = 0;
         requestsInSystemCount = 0;
@@ -165,7 +165,7 @@ public class SimulationByEvents {
 
                 if (!breakFlag) {
                     if (queueLength == queueSize) {
-                        refusalCount++;
+                        rejectionsCount++;
                     } else {
                         queueLength++;
                     }
@@ -214,7 +214,7 @@ public class SimulationByEvents {
         System.out.println("requestsCount = " + requestsCount);
         System.out.println("servicedRequestsCount = " + servicedRequestsCount);
         System.out.println("queueLength = " + queueLength);
-        System.out.println("refusalCount = " + refusalCount);
+        System.out.println("rejectionsCount = " + rejectionsCount);
         System.out.println("serviceTime = " + serviceTime);
         System.out.println();
         System.out.println("nearestMomentOfRequestRelease = " + nearestMomentOfRequestRelease);
@@ -226,15 +226,15 @@ public class SimulationByEvents {
     public void printResults() {
         int cutWidth = 22;
         System.out.println("-".repeat(cutWidth) + "result" + "-".repeat(cutWidth));
-        System.out.println("number of requests: " + (refusalCount + servicedRequestsCount));
+        System.out.println("number of requests: " + (rejectionsCount + servicedRequestsCount));
         System.out.println("number of serviced requests: " + servicedRequestsCount);
-        System.out.println("number of refuses: " + refusalCount);
+        System.out.println("number of rejections: " + rejectionsCount);
         System.out.println("model time: " + modelTime);
         System.out.println("probabilities of queuing system states:");
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
             System.out.printf("p%d = %f%n", i, systemTotalTimeWithRequests[i] / modelTime);
         }
-        System.out.println("refusal probability: " + (double) refusalCount / (refusalCount + servicedRequestsCount));
+        System.out.println("rejection probability: " + (double) rejectionsCount / (rejectionsCount + servicedRequestsCount));
         System.out.println("load factor: " + (1 - systemTotalTimeWithRequests[0] / modelTime));
         System.out.println("bandwidth: " + (double) servicedRequestsCount / modelTime);
         double average = 0;
