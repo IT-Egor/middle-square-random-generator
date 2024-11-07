@@ -146,7 +146,7 @@ public class MarkovProcessSimulation {
         System.out.println("-".repeat(cutWidth) + "result" + "-".repeat(cutWidth));
         System.out.println("probabilities of queuing system states:");
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
-            System.out.printf("p%d = %f%n", i, stateTotalTime[i] / modelTime);
+            System.out.printf("p%d = %.15f%n", i, stateTotalTime[i] / modelTime);
         }
 
         System.out.println("rejection probability: " + stateTotalTime[numberOfStates-1] / modelTime);

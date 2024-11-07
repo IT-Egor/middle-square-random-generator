@@ -238,7 +238,7 @@ public class SimulationByEvents {
 
         System.out.println("probabilities of queuing system states:");
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
-            System.out.printf("p%d = %f%n", i, systemTotalTimeWithRequests[i] / modelTime);
+            System.out.printf("p%d = %.15f%n", i, systemTotalTimeWithRequests[i] / modelTime);
         }
 
         System.out.println("rejection probability: "
