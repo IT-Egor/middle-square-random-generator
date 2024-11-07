@@ -21,16 +21,27 @@ public class MarkovProcessSimulation {
     private final List<Double> timeBetweenRequestsSequence;
     //------------------------------------input------------------------------------
 
+    //-----------------------------------service-----------------------------------
+    // матрица переходов
     private final double[][] transitionIntensities;
-    private Iterator<Double> timeBetweenRequests;
+    // количество состояний
     private final int numberOfStates;
-
-    private double modelTime;
-    private int servicedRequestsCount;
+    // суммарное время пребывания системы в состояниях
     private final double[] stateTotalTime;
+    // текущее состояние
     private int currentState;
+    // итератор последовательности случайных чисел
+    private Iterator<Double> timeBetweenRequests;
+    //-----------------------------------service-----------------------------------
 
+    //--------------------------------------------statistics---------------------------------------------
+    // время моделирования
+    private double modelTime;
+    // количество обработанных заявок
+    private int servicedRequestsCount;
+    //--------------------------------------------statistics---------------------------------------------
 
+    //----------------------------------------------setup------------------------------------------------
     public MarkovProcessSimulation(
             int numberOfRequests,
             int numberOfChannels,
@@ -78,25 +89,24 @@ public class MarkovProcessSimulation {
             }
         }
     }
+    //----------------------------------------------setup------------------------------------------------
 
+    //--------------------------------------------execution----------------------------------------------
     public void run() {
         while (servicedRequestsCount < numberOfRequests) {
-            double minTransitionTime;
-            int minIndex;
-
             Object[] result = findMinTransitionTime(transitionIntensities[currentState]);
 
-            minIndex = (int) result[0];
-            minTransitionTime = (double) result[1];
+            int nextState = (int) result[0];
+            double minTransitionTime = (double) result[1];
 
             modelTime += minTransitionTime;
             stateTotalTime[currentState] += minTransitionTime;
 
-            if (minIndex < currentState) {
+            if (nextState < currentState) {
                 servicedRequestsCount++;
             }
 
-            currentState = minIndex;
+            currentState = nextState;
         }
     }
 
@@ -114,7 +124,9 @@ public class MarkovProcessSimulation {
         }
         return new Object[]{minIndex, minTransitionTime};
     }
+    //--------------------------------------------execution----------------------------------------------
 
+    //---------------------------------------------results-----------------------------------------------
     public void printStatus() {
         int cutWidth = 22;
         System.out.println("-".repeat(cutWidth) + "status" + "-".repeat(cutWidth));
@@ -136,14 +148,17 @@ public class MarkovProcessSimulation {
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
             System.out.printf("p%d = %f%n", i, stateTotalTime[i] / modelTime);
         }
+
         System.out.println("rejection probability: " + stateTotalTime[numberOfStates-1] / modelTime);
         System.out.println("load factor: " + (1 - stateTotalTime[0] / modelTime));
         System.out.println("bandwidth: " + (double) servicedRequestsCount / modelTime);
+
         double average = 0;
         for (int i = 1; i < numberOfStates; i++) {
             average += i * stateTotalTime[i] / modelTime;
         }
         System.out.println("average number of requests: " + average);
+
         double servicedRequestsAverage = 0;
         for (int i = 0; i < numberOfStates; i++) {
             if (i < numberOfChannels) {
@@ -153,11 +168,13 @@ public class MarkovProcessSimulation {
             }
         }
         System.out.println("serviced requests average: " + servicedRequestsAverage / modelTime);
+
         double sum = 0;
         for (int i = numberOfChannels + 1; i <= numberOfChannels + queueSize; i++) {
             sum += stateTotalTime[i] * (i - numberOfChannels);
         }
         System.out.println("average queue length: " + sum / modelTime);
+
         double b = 0;
         double c = servicedRequestsAverage;
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
@@ -166,4 +183,5 @@ public class MarkovProcessSimulation {
         System.out.println("average waiting time: " + (b - c) / numberOfRequests);
         System.out.println("-".repeat(cutWidth) + "result" + "-".repeat(cutWidth));
     }
+    //---------------------------------------------results-----------------------------------------------
 }

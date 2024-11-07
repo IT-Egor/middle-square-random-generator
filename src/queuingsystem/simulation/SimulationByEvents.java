@@ -51,7 +51,7 @@ public class SimulationByEvents {
     private final double[] systemTotalTimeWithRequests;
     //----------------------------------------------arrays-----------------------------------------------
 
-    //----------------------------------------------helpers----------------------------------------------
+    //----------------------------------------------service----------------------------------------------
     // MIN — ближайший момент выхода обслуженной заявки из канала, считая от текущего модельного времени
     private double nearestMomentOfRequestRelease;
     // S — номер канала, который в текущем состоянии системы освободится первым (в момент времени MIN)
@@ -62,8 +62,9 @@ public class SimulationByEvents {
     private Iterator<Double> timeBetweenRequests;
     // DTS — время обслуживания заявки в канале (генерируемая в процессе моделирования случайная величина)
     private Iterator<Double> requestServiceTime;
-    //----------------------------------------------helpers----------------------------------------------
+    //----------------------------------------------service----------------------------------------------
 
+    //----------------------------------------------setup------------------------------------------------
     public SimulationByEvents(int numberOfRequests,
                               int numberOfChannels,
                               int queueSize,
@@ -118,7 +119,9 @@ public class SimulationByEvents {
         Arrays.fill(chanelTotalBusyTime, 0);
         Arrays.fill(systemTotalTimeWithRequests, 0);
     }
+    //----------------------------------------------setup------------------------------------------------
 
+    //--------------------------------------------execution----------------------------------------------
     public void run() {
         reset();
 
@@ -197,7 +200,9 @@ public class SimulationByEvents {
             }
         }
     }
+    //--------------------------------------------execution----------------------------------------------
 
+    //---------------------------------------------results-----------------------------------------------
     public void printStatus() {
         int cutWidth = 22;
         System.out.println("-".repeat(cutWidth) + "status" + "-".repeat(cutWidth));
@@ -230,24 +235,32 @@ public class SimulationByEvents {
         System.out.println("number of serviced requests: " + servicedRequestsCount);
         System.out.println("number of rejections: " + rejectionsCount);
         System.out.println("model time: " + modelTime);
+
         System.out.println("probabilities of queuing system states:");
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
             System.out.printf("p%d = %f%n", i, systemTotalTimeWithRequests[i] / modelTime);
         }
-        System.out.println("rejection probability: " + (double) rejectionsCount / (rejectionsCount + servicedRequestsCount));
+
+        System.out.println("rejection probability: "
+                + (double) rejectionsCount / (rejectionsCount + servicedRequestsCount));
         System.out.println("load factor: " + (1 - systemTotalTimeWithRequests[0] / modelTime));
         System.out.println("bandwidth: " + (double) servicedRequestsCount / modelTime);
+
         double average = 0;
         for (int i = 1; i <= numberOfChannels + queueSize; i++) {
             average += i * systemTotalTimeWithRequests[i] / modelTime;
         }
         System.out.println("average number of requests: " + average);
-        System.out.println("average number of busy channels: " + Arrays.stream(chanelTotalBusyTime).sum() / modelTime);
+
+        System.out.println("average number of busy channels: "
+                + Arrays.stream(chanelTotalBusyTime).sum() / modelTime);
+
         double sum = 0;
         for (int i = numberOfChannels + 1; i <= numberOfChannels + queueSize; i++) {
             sum += systemTotalTimeWithRequests[i] * (i - numberOfChannels);
         }
         System.out.println("average queue length: " + sum / modelTime);
+
         double b = 0;
         double c = Arrays.stream(chanelTotalBusyTime).sum();
         for (int i = 0; i <= numberOfChannels + queueSize; i++) {
@@ -256,4 +269,5 @@ public class SimulationByEvents {
         System.out.println("average waiting time: " + (b - c) / numberOfRequests);
         System.out.println("-".repeat(cutWidth) + "result" + "-".repeat(cutWidth));
     }
+    //---------------------------------------------results-----------------------------------------------
 }
