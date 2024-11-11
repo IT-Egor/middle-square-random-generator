@@ -26,7 +26,7 @@ public class SimulationByEvents {
     // T - текущее модельное время, изменяющееся скачком между моментами возникновения событий в системе
     private double modelTime;
     // TA — момент прихода очередной заявки (время, прошедшее с начала моделирования)
-    private double timeOfNextRequest;
+    private double timeUtilNextRequest;
     // K — счетчик пришедших заявок
     private int requestsCount;
     // KS — счетчик обслуженных заявок
@@ -104,7 +104,7 @@ public class SimulationByEvents {
 
     private void reset() {
         modelTime = 0;
-        timeOfNextRequest = 0;
+        timeUtilNextRequest = 0;
         requestsCount = 0;
         servicedRequestsCount = 0;
         queueLength = 0;
@@ -125,7 +125,7 @@ public class SimulationByEvents {
     public void run() {
         reset();
 
-        timeOfNextRequest += timeBetweenRequests.next();
+        timeUtilNextRequest += timeBetweenRequests.next();
         requestsCount++;
 
         while (requestsCount < numberOfRequests) {
@@ -141,13 +141,13 @@ public class SimulationByEvents {
                 i++;
             } while (i <= numberOfChannels);
 
-            if (timeOfNextRequest < nearestMomentOfRequestRelease) {
+            if (timeUtilNextRequest < nearestMomentOfRequestRelease) {
                 requestsInSystemCount = queueLength
                         + (int) Stream.of(busyChannels)
                                 .filter(isChanelFree -> isChanelFree)
                                 .count();
-                systemTotalTimeWithRequests[requestsInSystemCount] += timeOfNextRequest - modelTime;
-                modelTime = timeOfNextRequest;
+                systemTotalTimeWithRequests[requestsInSystemCount] += timeUtilNextRequest - modelTime;
+                modelTime = timeUtilNextRequest;
 
                 i = 1;
                 boolean breakFlag = false;
@@ -157,9 +157,9 @@ public class SimulationByEvents {
                     } else {
                         busyChannels[i - 1] = true;
 
-                        double dts = requestServiceTime.next();
-                        channelReleaseExpectedTime[i - 1] = modelTime + dts;
-                        chanelTotalBusyTime[i - 1] += dts;
+                        double currentRequestServiceTime = requestServiceTime.next();
+                        channelReleaseExpectedTime[i - 1] = modelTime + currentRequestServiceTime;
+                        chanelTotalBusyTime[i - 1] += currentRequestServiceTime;
 
                         breakFlag = true;
                         break;
@@ -174,7 +174,7 @@ public class SimulationByEvents {
                     }
                 }
 
-                timeOfNextRequest += timeBetweenRequests.next();
+                timeUtilNextRequest += timeBetweenRequests.next();
                 requestsCount++;
             } else {
                 requestsInSystemCount = queueLength
@@ -193,9 +193,9 @@ public class SimulationByEvents {
                 } else {
                     queueLength--;
 
-                    double dts = requestServiceTime.next();
-                    channelReleaseExpectedTime[firstReleasedChannelNumber - 1] = modelTime + dts;
-                    chanelTotalBusyTime[firstReleasedChannelNumber - 1] += dts;
+                    double currentRequestServiceTime = requestServiceTime.next();
+                    channelReleaseExpectedTime[firstReleasedChannelNumber - 1] = modelTime + currentRequestServiceTime;
+                    chanelTotalBusyTime[firstReleasedChannelNumber - 1] += currentRequestServiceTime;
                 }
             }
         }
@@ -215,7 +215,7 @@ public class SimulationByEvents {
         System.out.println("secondSequence = " + requestServiceTimeSequence.size());
         System.out.println();
         System.out.println("modelTime = " + modelTime);
-        System.out.println("timeOfNextRequest = " + timeOfNextRequest);
+        System.out.println("timeUtilNextRequest = " + timeUtilNextRequest);
         System.out.println("requestsCount = " + requestsCount);
         System.out.println("servicedRequestsCount = " + servicedRequestsCount);
         System.out.println("queueLength = " + queueLength);
